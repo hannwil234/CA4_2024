@@ -50,7 +50,7 @@ STP Planner --------------------------------------------------------------------
 """
 
 def read_plan():
-    with open('/home/ntnu-itk/catkin_ws/src/AI-planning/tmp_sas_plan.1', 'r') as plan:
+    with open('/home/ttk4192/catkin_ws/src/AI-planning/tmp_sas_plan.1', 'r') as plan:
         for line in plan:
             line = line.split()
             print(line)
@@ -66,16 +66,12 @@ def read_plan():
                 print(NAMED_WAYPOINTS[start_point])
                 print(NAMED_WAYPOINTS[end_point])
                 start_point = NAMED_WAYPOINTS[start_point]
-                end_point = NAMED_WAYPOINTS[end_point]
-                #if start_point[0]>end_point[0]:
-                 #   start_point[2]+=pi
-                
+                end_point = NAMED_WAYPOINTS[end_point]                
                 move_to_waypoint(start_point, end_point)
             elif (line[2] == 'manipulate_valve'):
                 Manipulate_OpenManipulator_x()
             elif (line[2] == 'check_seals_pump_picture_eo'):
-                print("Photo")
-                #taking_photo_exe()
+                print("Taking photo")
             else:
                 print("Invalid operation")
 
@@ -336,10 +332,10 @@ def move_to_waypoint(start_pos, end_pos):
     p.add_argument('-e', action='store_true', help='add extra cost or not')
     p.add_argument('-g', action='store_true', help='show grid or not')
     args = p.parse_args()
-    print(args)
+    #print(args)
     list_of_waypoints=hybrid_astar.main_hybrid_a(args.heu,start_pos,end_pos,True,args.e,args.g)
     print("Executing path following")
-    print("Supposed to run turtlebot_move(), needs to be fixed")
+    #print("Supposed to run turtlebot_move(), needs to be fixed")
     global WAYPOINTS
     WAYPOINTS=list_of_waypoints
     #print(WAYPOINTS)

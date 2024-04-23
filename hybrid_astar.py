@@ -31,6 +31,7 @@ class HybridAstar:
         self.car = car
         self.grid = grid
         self.reverse = reverse
+        #self.reverse=True
         self.unit_theta = unit_theta
         self.dt = dt
         self.check_dubins = check_dubins
@@ -249,9 +250,9 @@ class HybridAstar:
 def main_hybrid_a(heu,start_pos, end_pos,reverse, extra, grid_on):
 
     tc = map_grid()
-    env = Environment(tc.obs, 5, 2.9) 
-    car = SimpleCar(env, start_pos, end_pos, 0.1)
-    grid = Grid(env)
+    env = Environment(tc.obs, lx=5, ly=2.9) 
+    car = SimpleCar(env, start_pos, end_pos,l=0.1875)
+    grid = Grid(env,cell_size=0.1)
 
     hastar = HybridAstar(car, grid, reverse)
 
@@ -274,7 +275,7 @@ def main_hybrid_a(heu,start_pos, end_pos,reverse, extra, grid_on):
     xl, yl = [], []
     xl_np1,yl_np1=[],[]
     carl = []
-    dt_s=int(25)  # samples for gazebo simulator
+    dt_s=int(5)  # samples for gazebo simulator (25)
     for i in range(len(path)):
         xl.append(path[i].pos[0])
         yl.append(path[i].pos[1])
@@ -293,11 +294,11 @@ def main_hybrid_a(heu,start_pos, end_pos,reverse, extra, grid_on):
     list_of_waypoints = np.column_stack([xl_np2, yl_np2])
     xl_np=xl_np-10
     yl_np=yl_np-10
-    global WAYPOINTS
+    #global WAYPOINTS
     #WAYPOINTS=np.column_stack([xl_np,yl_np])
     #print(WAYPOINTS)
     print(list_of_waypoints)
-    return list_of_waypoints
+    #return list_of_waypoints
     
     start_state = car.get_car_state(car.start_pos)
     end_state = car.get_car_state(car.end_pos)
@@ -384,6 +385,7 @@ def main_hybrid_a(heu,start_pos, end_pos,reverse, extra, grid_on):
                                   interval=1, repeat=True, blit=True)
 
     plt.show()
+    return list_of_waypoints
 
 class Node:
     """ Hybrid A* tree node. """
@@ -414,12 +416,17 @@ class map_grid:
 
         self.obs = [
             #[x, y, bredde, høyde]
-            [1, 1.6, 1.7, 0.8],
-            [3.2, 1.8, 0.8, 0.5],
-            [1.3, 0.7, 0.9, 0.3],
-            [2.4, 0.7, 0.9, 0.3],
-            [0, 1, 0.5, 0.2],
-            [2.7, 0, 2.3, 0.3]
+            [ 3.15, 0, 1.85, 0.3],
+            #[0, 0, 0.2, 0.2],
+            #[4.8, 0.3, 0.2, 0.2],
+            #[3.15, 2.7, 0.2, 0.2],
+            [0, 1, 0.4, 0.2],
+            [1, 1.5, 0.4, 0.8],
+            [1+0.4+0.1, 1.5, 0.4, 0.8],            
+            [1+0.4+0.1+0.4+0.1, 1.5, 0.7, 0.8],
+            [1.4, 0.5, 0.9, 0.3],
+            [1.4+0.9+0.2, 0.5, 0.9, 0.3],
+            [3.25,1.75,0.8,0.5]
         ]
 
 '''

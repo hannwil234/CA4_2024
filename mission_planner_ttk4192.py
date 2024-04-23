@@ -57,15 +57,19 @@ def read_plan():
             if (line[2] == 'charge_robot'):
                 charge_battery_waypoint0()
             elif (line[2] == 'move_robot'):
+                #init_rot=end_point[2]
                 start_point = int(line[4][-1])
                 end_point = int(line[5][-1])
                 print("Moving")
                 print(start_point)
                 print(end_point)
-                print(WAYPOINTS[start_point])
-                print(WAYPOINTS[end_point])
-                start_point = WAYPOINTS[start_point]
-                end_point = WAYPOINTS[end_point]
+                print(NAMED_WAYPOINTS[start_point])
+                print(NAMED_WAYPOINTS[end_point])
+                start_point = NAMED_WAYPOINTS[start_point]
+                end_point = NAMED_WAYPOINTS[end_point]
+                #if start_point[0]>end_point[0]:
+                 #   start_point[2]+=pi
+                
                 move_to_waypoint(start_point, end_point)
             elif (line[2] == 'manipulate_valve'):
                 Manipulate_OpenManipulator_x()
@@ -239,10 +243,7 @@ class turtlebot_move():
 """ 
 Hybrid A-star pathfinding --------------------------------------------------------------------
 """
-
-
-
-#4) Program here the turtlebot actions (based in your AI planner)
+# (based in your AI planner)
 """
 Turtlebot 3 actions-------------------------------------------------------------------------
 """
@@ -335,10 +336,14 @@ def move_to_waypoint(start_pos, end_pos):
     p.add_argument('-e', action='store_true', help='add extra cost or not')
     p.add_argument('-g', action='store_true', help='show grid or not')
     args = p.parse_args()
-    hybrid_astar.main_hybrid_a(args.heu,start_pos,end_pos,args.r,args.e,args.g)
+    print(args)
+    list_of_waypoints=hybrid_astar.main_hybrid_a(args.heu,start_pos,end_pos,True,args.e,args.g)
     print("Executing path following")
     print("Supposed to run turtlebot_move(), needs to be fixed")
-    #turtlebot_move()
+    global WAYPOINTS
+    WAYPOINTS=list_of_waypoints
+    #print(WAYPOINTS)
+    turtlebot_move()
 
 
 def Manipulate_OpenManipulator_x():
@@ -417,9 +422,10 @@ def charge_battery_waypoint0():
 
 # Define the global varible: WAYPOINTS  Wpts=[[x_i,y_i,dir]];
 global WAYPOINTS
+global NAMED_WAYPOINTS
 #WAYPOINTS = [[0.2,0.3],[1.85,0.4],[2.9,0.91],[3.15,2.6],[4.7,0.5],[0.77,2.4],[3.65,1.65]] Noen problemer med kollisjoner på waypoint 2, 5 og 6
-WAYPOINTS = [[0.2,0.3,0],[1.85,0.4,0],[2.9,1.3,0],[3.15,2.6,0],[4.7,0.5,0],[0.7,2.7,0],[3.6,1.45,0]]
-
+NAMED_WAYPOINTS = [[0.35,0.35,0],[1.85,0.2,0],[2.9,1.1,0],[3.15,2.6,0],[4.6,0.6,0],[0.67,2.4,0],[3.65,1.45,0]]
+WAYPOINTS=[]
 
 # 5) Program here the main commands of your mission planner code
 """ Main code ---------------------------------------------------------------------------
@@ -438,10 +444,20 @@ if __name__ == '__main__':
         print()
         print("**************************************************************")
         print()
-
+        #move_to_waypoint(NAMED_WAYPOINTS[0],NAMED_WAYPOINTS[1])
         read_plan()
+        p = argparse.ArgumentParser()
+        p.add_argument('-heu', type=int, default=1, help='heuristic type')
+        p.add_argument('-r', action='store_true', help='allow reverse or not')
+        p.add_argument('-e', action='store_true', help='add extra cost or not')
+        p.add_argument('-g', action='store_true', help='show grid or not')
+        args = p.parse_args()
+        
+        start_pos=NAMED_WAYPOINTS[0]
+        end_pos=NAMED_WAYPOINTS[1]
+        list_of_waypoints=hybrid_astar.main_hybrid_a(args.heu,start_pos,end_pos,True,args.e,args.g)
+        #list_of=hybrid_astar.main_hybrid_a
 
     except rospy.ROSInterruptException:
         rospy.loginfo("Action terminated.")
     
-

@@ -50,6 +50,7 @@ STP Planner --------------------------------------------------------------------
 """
 
 def read_plan():
+    rospy.init_node('turtlebot_move', anonymous=False)
     with open('/home/ntnu-itk/catkin_ws/src/AI-planning/tmp_sas_plan.1', 'r') as plan:
         for line in plan:
             line = line.split()
@@ -69,8 +70,10 @@ def read_plan():
                 move_to_waypoint(start_point, end_point)
             elif (line[2] == 'manipulate_valve'):
                 Manipulate_OpenManipulator_x()
+                taking_photo_exe()
             elif (line[2] == 'check_seals_pump_picture_eo'):
                 print("Photo")
+                taking_photo_exe()
             else:
                 print("Invalid operation")
 
@@ -127,7 +130,7 @@ class turtlebot_move():
     Path-following module
     """
     def __init__(self):
-        rospy.init_node('turtlebot_move', anonymous=False)
+        #rospy.init_node('turtlebot_move', anonymous=False)
         rospy.loginfo("Press CTRL + C to terminate")
         rospy.on_shutdown(self.stop)
 
@@ -295,8 +298,8 @@ def taking_photo_exe():
     # Sleep to give the last log messages time to be sent
 
 	# saving photo in a desired directory
-    file_source = '/home/miguel/catkin_ws/'
-    file_destination = '/home/miguel/catkin_ws/src/assigment4_ttk4192/scripts'
+    file_source = '/home/ntnu-itk/catkin_ws/'
+    file_destination = '/home/ntnu-itk/catkin_ws/src/assigment4_ttk4192/scripts'
     g='photo'+dt_string+'.jpg'
 
     shutil.move(file_source + g, file_destination)

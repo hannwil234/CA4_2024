@@ -50,14 +50,13 @@ STP Planner --------------------------------------------------------------------
 """
 
 def read_plan():
-    with open('/home/ttk4192/catkin_ws/src/AI-planning/tmp_sas_plan.1', 'r') as plan:
+    with open('/home/ntnu-itk/catkin_ws/src/AI-planning/tmp_sas_plan.1', 'r') as plan:
         for line in plan:
             line = line.split()
             print(line)
             if (line[2] == 'charge_robot'):
                 charge_battery_waypoint0()
             elif (line[2] == 'move_robot'):
-                #init_rot=end_point[2]
                 start_point = int(line[4][-1])
                 end_point = int(line[5][-1])
                 print("Moving")
@@ -71,7 +70,7 @@ def read_plan():
             elif (line[2] == 'manipulate_valve'):
                 Manipulate_OpenManipulator_x()
             elif (line[2] == 'check_seals_pump_picture_eo'):
-                print("Taking photo")
+                print("Photo")
             else:
                 print("Invalid operation")
 
@@ -442,6 +441,28 @@ if __name__ == '__main__':
         print()
         #move_to_waypoint(NAMED_WAYPOINTS[0],NAMED_WAYPOINTS[1])
         read_plan()
+
+        #move_to_waypoint(WAYPOINTS[2], WAYPOINTS[4])
+        #start waypoint 2
+        #print("Checking valve 1")
+        #time.sleep(5)
+        #print("Moving to waypoint 1")
+        #move_to_waypoint(NAMED_WAYPOINTS[2], NAMED_WAYPOINTS[1])
+        #print("Checking valve 0")
+        #time.sleep(5)
+        #print("Moving to waypoint 5")
+        #move_to_waypoint(NAMED_WAYPOINTS[1], NAMED_WAYPOINTS[5])
+        #print("Checking pump 0")
+        #time.sleep(5)
+        #print("Moving to waypoint 6")
+        #move_to_waypoint(NAMED_WAYPOINTS[5], NAMED_WAYPOINTS[6])
+        #print("Checking pump 1")
+        #time.sleep(5)
+        #print("Moving to waypoint 4")
+        #move_to_waypoint(NAMED_WAYPOINTS[6], NAMED_WAYPOINTS[4])
+        #print("Mission complete")
+
+
         p = argparse.ArgumentParser()
         p.add_argument('-heu', type=int, default=1, help='heuristic type')
         p.add_argument('-r', action='store_true', help='allow reverse or not')
@@ -449,9 +470,9 @@ if __name__ == '__main__':
         p.add_argument('-g', action='store_true', help='show grid or not')
         args = p.parse_args()
         
-        start_pos=NAMED_WAYPOINTS[0]
-        end_pos=NAMED_WAYPOINTS[1]
-        list_of_waypoints=hybrid_astar.main_hybrid_a(args.heu,start_pos,end_pos,True,args.e,args.g)
+        start_pos=NAMED_WAYPOINTS[3]
+        end_pos=NAMED_WAYPOINTS[4]
+        #list_of_waypoints=hybrid_astar.main_hybrid_a(args.heu,start_pos,end_pos,True,args.e,args.g)
         #list_of=hybrid_astar.main_hybrid_a
 
     except rospy.ROSInterruptException:
